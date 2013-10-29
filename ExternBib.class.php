@@ -191,6 +191,8 @@ class ExternBib {
     echo "<ul class=\"plainlinks\">\n";
 
     foreach ($entries as $entry) {
+      // fetch the entry
+      
       // use db name if given
       if(is_array($entry) && array_key_exists("db", $entry))
       {
