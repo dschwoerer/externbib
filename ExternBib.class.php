@@ -29,10 +29,6 @@ class ExternBib {
       }
     }
         
-    if (!($this->dbs["library"] = dba_open($dbfiles["library"], 'rd'))) {
-          error_log("ERROR: Could not open $dbfiles[library]!");
-    }
-
     if (is_array($filedirs))
       $this->filedirs = $filedirs;
     else
@@ -195,8 +191,6 @@ class ExternBib {
     echo "<ul class=\"plainlinks\">\n";
 
     foreach ($entries as $entry) {
-      // fetch the entry
-      
       // use db name if given
       if(is_array($entry) && array_key_exists("db", $entry))
       {
@@ -212,8 +206,10 @@ class ExternBib {
          $entry = reset($entry);
       } else {
 	// else check in each database if entry exists
-	for (reset($this->dbs); (current($this->dbs) !== false) && !isset($data); next($this->dbs)){
-	  $data = dba_fetch($entry, current($this->dbs));
+	foreach ($this->dbs as $db){
+	  $data = dba_fetch($entry, $db);
+	  if ($data)
+	    break;
 	}
             
          $dbname = key($this->dbs);
